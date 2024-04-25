@@ -14,12 +14,18 @@ typedef struct {
     float m[4][4];
 } Mat4x4;
 
+Vec3  Vec3ScalarAdd(const Vec3* a, const float b);
+Vec3  Vec3ScalarMul(const Vec3* a, const float b);
+
 Vec3  Vec3Add(const Vec3* a, const Vec3* b);
 Vec3  Vec3Sub(const Vec3* a, const Vec3* b);
 float Vec3Dot(const Vec3* a, const Vec3* b);
 Vec3  Vec3Cross(const Vec3* a, const Vec3* b);
+
 float Vec3Length(const Vec3* a);
+
 Vec3  Vec3Normalize(const Vec3* a);
+
 Vec3  Vec3MulByMat4x4(const Vec3* a, const Mat4x4* m);
 
 Mat4x4 InitIdentityMatrix(void);

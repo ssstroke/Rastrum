@@ -4,6 +4,22 @@
 
 #include <stdint.h>
 
+Vec3  Vec3ScalarAdd(const Vec3* a, const float b) {
+    return (Vec3) {
+        .x = a->x + b,
+        .y = a->y + b,
+        .z = a->z + b,
+    };
+}
+
+Vec3  Vec3ScalarMul(const Vec3* a, const float b) {
+    return (Vec3) {
+        .x = a->x * b,
+        .y = a->y * b,
+        .z = a->z * b,
+    };
+}
+
 Vec3 Vec3Add(const Vec3* a, const Vec3* b) {
     return (Vec3) {
         .x = a->x + b->x,

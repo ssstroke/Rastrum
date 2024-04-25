@@ -20,12 +20,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\algebra.c" />
+    <ClCompile Include="src\input.c" />
     <ClCompile Include="src\render.c" />
     <ClCompile Include="src\mesh.c" />
     <ClCompile Include="src\main.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\algebra.h" />
+    <ClInclude Include="src\input.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\mesh.h" />
     <ClInclude Include="src\render.h" />
