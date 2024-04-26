@@ -78,9 +78,9 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
 
             Vec3 ip;
 
-            if ( !IntersectRaySegmentSphere(&a, &bma, &ball_origin, ball_radius) &&
+            if (!IntersectRaySegmentSphere(&a, &bma, &ball_origin, ball_radius) &&
                 !IntersectRaySegmentSphere(&b, &cmb, &ball_origin, ball_radius) &&
-                !IntersectRaySegmentSphere(&c, &amc, &ball_origin, ball_radius) )
+                !IntersectRaySegmentSphere(&c, &amc, &ball_origin, ball_radius))
                 outside_edges = SDL_TRUE;
 
             if (outside_edges && outside_vertices)
@@ -97,11 +97,31 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
                 .x = abc_normal.x,
                 .z = abc_normal.z,
             };
-            
-            // Actually it is angle = ... / ( |A| * |B| ),
-            // but |B| is already of length 1.
-            const float angle = SDL_acosf(Vec2Dot(&mesh_center_to_ball, &abc_normal_v2) / Vec2Length(&mesh_center_to_ball));
-            SDL_Log("angle = %f\n", RADIANS_TO_DEGREES(angle));
+
+            // If we hit plane that points left (right), simply inverse x direction.
+            //
+
+            const Vec2 unit_x = {
+                .x = 1.0f,
+                .z = 0.0f,
+            };
+
+            if (Vec2Dot(&abc_normal_v2, &unit_x) == 1) {
+                direction->x = -direction->x;
+            }
+            else {
+                // We hit plane that points up (down), calculate new direction.
+                //
+
+                const float hit_angle_cos = Vec2Dot(&mesh_center_to_ball, &abc_normal_v2) / Vec2Length(&mesh_center_to_ball);
+                const float hit_angle_sin = SDL_sqrtf(1.0f - hit_angle_cos * hit_angle_cos);
+
+                direction->x = (direction->x * hit_angle_cos) - (direction->z * hit_angle_sin);
+                direction->z = (direction->z * hit_angle_cos) + (direction->x * hit_angle_sin);
+
+                if (Vec2Dot(&mesh_center_to_ball, &unit_x) / Vec2Length(&mesh_center_to_ball) < 0)
+                    direction->x = -direction->x;
+            }
 
             collides = SDL_TRUE;
             break;

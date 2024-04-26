@@ -61,7 +61,7 @@ int main(void) {
     rocket->transform->m[1][2] = -1.0f;
     rocket->transform->m[2][1] = 1.0f;
     rocket->transform->m[2][2] = 0;
-    rocket->transform->m[3][2] = 1.0f;
+    rocket->transform->m[3][2] = 2.0f;
 
     ball->transform->m[3][2] = -1.0f;
 
