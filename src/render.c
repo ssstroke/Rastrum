@@ -4,6 +4,12 @@
 
 #include <SDL.h>
 
+// 11110000 11110000 11110000 11110000
+// 
+
+#define EXPAND_RGBA(x) \
+        (int)(x >> 24), (int)((x << 8) >> 24), (int)((x << 16) >> 24), (int)((x << 24) >> 24)
+
 SDL_Renderer* g_renderer = NULL;
 Mat4x4        g_camera;
 Mat4x4        g_world_to_camera;
@@ -17,7 +23,7 @@ Mat4x4 RenderGetCamera() {
     return g_camera;
 }
 
-void RenderSetCamera(Mat4x4* camera) {
+void RenderSetCamera(const Mat4x4* camera) {
     g_camera = *camera;
     g_world_to_camera = Mat4x4Inverse(&g_camera);
 }
@@ -26,12 +32,12 @@ void RenderSetRenderer(const SDL_Renderer* renderer) {
     g_renderer = renderer;
 }
 
-void RenderBackgroud(const int r, const int g, const int b, const int a) {
-    SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
+void RenderBackgroud(const Uint32 color) {
+    SDL_SetRenderDrawColor(g_renderer, EXPAND_RGBA(color));
     SDL_RenderClear(g_renderer);
 }
 
-void RenderMeshWireframe(const Mesh* mesh, const int r, const int g, const int b, const int a) {
+void RenderMeshWireframe(const Mesh* mesh, const Uint32 color) {
     // Iterate over every face.
     //
 
@@ -109,7 +115,7 @@ void RenderMeshWireframe(const Mesh* mesh, const int r, const int g, const int b
             {.x = c_raster_x, .y = c_raster_y}, // 3
             {.x = a_raster_x, .y = a_raster_y}, // 4
         };
-        SDL_SetRenderDrawColor(g_renderer, r, g, b, a);
+        SDL_SetRenderDrawColor(g_renderer, EXPAND_RGBA(color));
         SDL_RenderDrawLines(g_renderer, points, 4);
     };
 }

@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\algebra.c" />
+    <ClCompile Include="src\game.c" />
     <ClCompile Include="src\input.c" />
     <ClCompile Include="src\render.c" />
     <ClCompile Include="src\mesh.c" />
@@ -27,6 +28,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\algebra.h" />
+    <ClInclude Include="src\game.h" />
     <ClInclude Include="src\input.h" />
     <ClInclude Include="src\main.h" />
     <ClInclude Include="src\mesh.h" />

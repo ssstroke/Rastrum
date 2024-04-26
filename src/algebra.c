@@ -4,6 +4,56 @@
 
 #include <stdint.h>
 
+// Vec2 functions.
+//
+
+Vec2  Vec2ScalarAdd(const Vec2* a, const float b) {
+    return (Vec2) {
+        .x = a->x + b,
+        .z = a->z + b,
+    };
+}
+
+Vec2  Vec2ScalarMul(const Vec2* a, const float b) {
+    return (Vec2) {
+        .x = a->x * b,
+        .z = a->z * b,
+    };
+}
+
+Vec2  Vec2Add(const Vec2* a, const Vec2* b) {
+    return (Vec2) {
+        .x = a->x + b->x,
+        .z = a->z + b->z,
+    };
+}
+
+Vec2  Vec2Sub(const Vec2* a, const Vec2* b) {
+    return (Vec2) {
+        .x = a->x - b->x,
+        .z = a->z - b->z,
+    };
+}
+
+float Vec2Dot(const Vec2* a, const Vec2* b) {
+    return a->x * b->x + a->z * b->z;
+}
+
+float Vec2Length(const Vec2* a) {
+    return SDL_sqrtf(a->x * a->x + a->z * a->z);
+}
+
+Vec2  Vec2Normalize(const Vec2* a) {
+    const float len_inverse = 1.0f / Vec2Length(a);
+    return (Vec2) {
+        .x = a->x * len_inverse,
+        .z = a->z * len_inverse,
+    };
+}
+
+// Vec3 functions.
+//
+
 Vec3  Vec3ScalarAdd(const Vec3* a, const float b) {
     return (Vec3) {
         .x = a->x + b,
@@ -77,6 +127,9 @@ Vec3 Vec3MulByMat4x4(const Vec3* a, const Mat4x4* m) {
 
     return result;
 }
+
+// Mat4x4 functions.
+//
 
 Mat4x4 InitIdentityMatrix(void) {
     return (Mat4x4) {

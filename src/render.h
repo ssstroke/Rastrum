@@ -7,9 +7,9 @@
 
 void    RenderInitDefaultCamera(void);
 Mat4x4  RenderGetCamera(void);
-void    RenderSetCamera(Mat4x4* camera);
+void    RenderSetCamera(const Mat4x4* camera);
 
 void RenderSetRenderer(const SDL_Renderer* renderer);
 
-void RenderBackgroud(const int r, const int g, const int b, const int a);
-void RenderMeshWireframe(const Mesh* mesh, const int r, const int g, const int b, const int a);
+void RenderBackgroud(const Uint32 color);
+void RenderMeshWireframe(const Mesh* mesh, const Uint32 color);

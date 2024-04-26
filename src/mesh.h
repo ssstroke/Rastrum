@@ -11,6 +11,7 @@ typedef struct {
     uint_fast32_t* indices;
     uint_fast32_t number_of_faces;
     uint_fast32_t number_of_vertices;
+    Uint32 color;
 } Mesh;
 
 Mesh* MeshLoadFromObj(const char* filename);
