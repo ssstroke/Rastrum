@@ -2,8 +2,10 @@
 
 #include <SDL.h>
 
-#define WINDOW_WIDTH  800
+#define WINDOW_WIDTH  1280
 #define WINDOW_HEIGHT 800
+
+#define TARGET_FPS    144.0f
 
 #define RGBA_COLOR_BLACK            (Uint32)0x000000ff
 #define RGBA_COLOR_WHITE            (Uint32)0xffffffff

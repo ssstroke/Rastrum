@@ -12,8 +12,6 @@
 
 // Standard headers.
 
-#define TARGET_FPS 144.0f
-
 int main(void) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
