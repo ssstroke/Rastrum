@@ -2,8 +2,6 @@
 
 #include "main.h"
 
-#define SPEED 0.05f
-
 SDL_bool IntersectRaySegmentSphere(const Vec3* o, const Vec3* d, const Vec3* so, float radius2);
 
 // TODO: See if I still need to check for vertices intersections.

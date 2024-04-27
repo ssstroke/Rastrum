@@ -4,9 +4,6 @@
 
 #include <SDL.h>
 
-// 11110000 11110000 11110000 11110000
-// 
-
 #define EXPAND_RGBA(x) \
         (int)(x >> 24), (int)((x << 8) >> 24), (int)((x << 16) >> 24), (int)((x << 24) >> 24)
 
@@ -102,6 +99,25 @@ void RenderGameObjectWireframe(const GameObject* object, const Uint32 color) {
         const Vec3 a_world = Vec3MulByMat4x4(&mesh->vertices[mesh->indices[i * 3 + 0]], object->transform);
         const Vec3 b_world = Vec3MulByMat4x4(&mesh->vertices[mesh->indices[i * 3 + 1]], object->transform);
         const Vec3 c_world = Vec3MulByMat4x4(&mesh->vertices[mesh->indices[i * 3 + 2]], object->transform);
+
+        // Back face culling.
+        //
+
+        {
+            const Vec3 ba = Vec3Sub(&b_world, &a_world);
+            const Vec3 ca = Vec3Sub(&c_world, &a_world);
+            Vec3 abc_normal = Vec3Cross(&ba, &ca);
+            //abc_normal = Vec3Normalize(&abc_normal);
+
+            const Vec3 view_direction = {
+                .x = g_camera.m[2][0],
+                .y = g_camera.m[2][1],
+                .z = g_camera.m[2][2],
+            };
+
+            if (Vec3Dot(&view_direction, &abc_normal) < 0)
+                continue;
+        }
 
         // Face vertices (in camera space).
         //

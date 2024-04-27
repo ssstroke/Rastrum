@@ -12,6 +12,8 @@
 
 // Standard headers.
 
+#define TARGET_FPS 144.0f
+
 int main(void) {
     SDL_Window* window = NULL;
     SDL_Renderer* renderer = NULL;
@@ -39,6 +41,8 @@ int main(void) {
         }
     }
 
+    RenderSetRenderer(renderer);
+
     // Load meshes.
     //
 
@@ -64,69 +68,81 @@ int main(void) {
     // Setup scene objects.
     //
 
-    GameObject objects[3 + 1 + 1 + 6];
+    GameObject objects[3 + 1 + 1 + 8];
 
-    // Left wall.
-    objects[0].mesh = mesh_wall_side;
-    objects[0].active = SDL_TRUE;
-    objects[0].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[0], -9.0f, 0, -14.0f);
+    {
+        // Left wall.
+        objects[0].mesh = mesh_wall_side;
+        objects[0].active = SDL_TRUE;
+        objects[0].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[0], -9.0f, 0, -14.0f);
 
-    // Right wall.
-    objects[1].mesh = mesh_wall_side;
-    objects[1].active = SDL_TRUE;
-    objects[1].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[1], 9.0f, 0, -14.0f);
+        // Right wall.
+        objects[1].mesh = mesh_wall_side;
+        objects[1].active = SDL_TRUE;
+        objects[1].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[1], 9.0f, 0, -14.0f);
 
-    // Back wall.
-    objects[2].mesh = mesh_wall_back;
-    objects[2].active = SDL_TRUE;
-    objects[2].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[2], 0, 0, -27.0f);
+        // Back wall.
+        objects[2].mesh = mesh_wall_back;
+        objects[2].active = SDL_TRUE;
+        objects[2].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[2], 0, 0, -27.0f);
 
-    // Ball.
-    objects[3].mesh   = mesh_ball;
-    objects[3].active = SDL_TRUE;
-    objects[3].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[3], 0, 0, -4.0f);
+        // Ball.
+        objects[3].mesh = mesh_ball;
+        objects[3].active = SDL_TRUE;
+        objects[3].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[3], 0, 0, -4.0f);
 
-    // Player.
-    objects[4].mesh  = mesh_rectangle;
-    objects[4].active = SDL_TRUE;
-    objects[4].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[4], 0, 0, -1.0f);
+        // Player.
+        objects[4].mesh = mesh_rectangle;
+        objects[4].active = SDL_TRUE;
+        objects[4].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[4], 0, 0, -1.0f);
 
-    // Entities.
-    objects[5].mesh = mesh_rectangle;
-    objects[5].active = SDL_TRUE;
-    objects[5].entity = SDL_TRUE;
-    objects[5].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[5], -6.0f, 0, -24.0f);
-    objects[6].mesh = mesh_rectangle;
-    objects[6].active = SDL_TRUE;
-    objects[6].entity = SDL_TRUE;
-    objects[6].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[6], -2.0f, 0, -24.0f);
-    objects[7].mesh = mesh_rectangle;
-    objects[7].active = SDL_TRUE;
-    objects[7].entity = SDL_TRUE;
-    objects[7].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[7], 2.0f, 0, -24.0f);
-    objects[8].mesh = mesh_rectangle;
-    objects[8].active = SDL_TRUE;
-    objects[8].entity = SDL_TRUE;
-    objects[8].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[8], 6.0f, 0, -24.0f);
-    objects[9].mesh = mesh_rectangle;
-    objects[9].active = SDL_TRUE;
-    objects[9].entity = SDL_TRUE;
-    objects[9].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[9], -6.0f, 0, -22.0f);
-    objects[10].mesh = mesh_rectangle;
-    objects[10].active = SDL_TRUE;
-    objects[10].entity = SDL_TRUE;
-    objects[10].transform = malloc(sizeof(Mat4x4));
-    GameObjectSetTransformPosition(&objects[10], -2.0f, 0, -22.0f);
+        // Entities.
+        objects[5].mesh = mesh_rectangle;
+        objects[5].active = SDL_TRUE;
+        objects[5].entity = SDL_TRUE;
+        objects[5].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[5], -6.0f, 0, -24.0f);
+        objects[6].mesh = mesh_rectangle;
+        objects[6].active = SDL_TRUE;
+        objects[6].entity = SDL_TRUE;
+        objects[6].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[6], -2.0f, 0, -24.0f);
+        objects[7].mesh = mesh_rectangle;
+        objects[7].active = SDL_TRUE;
+        objects[7].entity = SDL_TRUE;
+        objects[7].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[7], 2.0f, 0, -24.0f);
+        objects[8].mesh = mesh_rectangle;
+        objects[8].active = SDL_TRUE;
+        objects[8].entity = SDL_TRUE;
+        objects[8].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[8], 6.0f, 0, -24.0f);
+        objects[9].mesh = mesh_rectangle;
+        objects[9].active = SDL_TRUE;
+        objects[9].entity = SDL_TRUE;
+        objects[9].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[9], -6.0f, 0, -22.0f);
+        objects[10].mesh = mesh_rectangle;
+        objects[10].active = SDL_TRUE;
+        objects[10].entity = SDL_TRUE;
+        objects[10].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[10], -2.0f, 0, -22.0f);
+        objects[11].mesh = mesh_rectangle;
+        objects[11].active = SDL_TRUE;
+        objects[11].entity = SDL_TRUE;
+        objects[11].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[11], 2.0f, 0, -22.0f);
+        objects[12].mesh = mesh_rectangle;
+        objects[12].active = SDL_TRUE;
+        objects[12].entity = SDL_TRUE;
+        objects[12].transform = malloc(sizeof(Mat4x4));
+        GameObjectSetTransformPosition(&objects[12], 6.0f, 0, -22.0f);
+    }
     
     GameObject* player = &objects[4];
     GameObject* ball = &objects[3];
@@ -144,10 +160,6 @@ int main(void) {
         }
     };
     RenderSetCamera(&camera);
-
-    //RenderInitCamera(0.0f, 24.0f, 2.0f, -60.0f, 0.0f, 0.0f);
-
-    RenderSetRenderer(renderer);
 
     Vec2 ball_direction = {
         .x = 0.707f,
@@ -176,6 +188,8 @@ int main(void) {
             RenderGameObjectWireframe(&objects[i], objects[i].mesh->color);
 
         SDL_RenderPresent(renderer);
+
+        SDL_Delay((Uint32)(1.0f / TARGET_FPS * 1000.0f));
     }
 
 Exit:
