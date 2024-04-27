@@ -35,20 +35,17 @@ Mesh* MeshLoadFromObj(const char* filename) {
         }
     }
 
-    mesh->transform          = SDL_malloc(sizeof(Mat4x4));
     mesh->vertices           = SDL_malloc((size_t)vertex_count * sizeof(Vec3));
     mesh->indices            = SDL_malloc((size_t)face_count * 3 * sizeof(uint_fast32_t));
     mesh->number_of_faces    = face_count;
     mesh->number_of_vertices = vertex_count;
     mesh->color              = 0xff00ffff;
 
-    if (mesh->transform == NULL || mesh->vertices == NULL || mesh->indices == NULL) {
+    if (mesh->vertices == NULL || mesh->indices == NULL) {
         SDL_LogError(SDL_LOG_CATEGORY_ERROR, "Memory allocation failed for `%s`\n", filename);
         MeshFree(mesh);
         goto Exit;
     }
-
-    *mesh->transform = InitIdentityMatrix();
 
     rewind(file);
     while (fgets(line, sizeof(line), file)) {
@@ -75,10 +72,8 @@ Exit:
     if (file != NULL) fclose(file);
     return mesh;
 }
-
 void MeshFree(Mesh* mesh) {
     if (mesh != NULL) {
-        if (mesh->transform != NULL) SDL_free(mesh->transform);
         if (mesh->vertices != NULL)  SDL_free(mesh->vertices);
         if (mesh->indices != NULL)   SDL_free(mesh->indices);
     }

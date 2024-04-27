@@ -1,7 +1,7 @@
 #pragma once
 
-#include "mesh.h"
+#include "game.h"
 
 #include <SDL.h>
 
-SDL_bool InputProcess(Mesh* rocket);
+SDL_bool InputProcess(GameObject* player);

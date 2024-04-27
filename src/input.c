@@ -1,8 +1,8 @@
 #include "input.h"
 
-#define STEP 0.1f
+#define STEP 0.2f
 
-SDL_bool InputProcess(Mesh* rocket) {
+SDL_bool InputProcess(GameObject* player) {
     SDL_Event event;
     
     while (SDL_PollEvent(&event) == 1) {
@@ -13,16 +13,16 @@ SDL_bool InputProcess(Mesh* rocket) {
         case SDL_KEYDOWN:
             switch (event.key.keysym.sym) {
             case SDLK_UP:
-                rocket->transform->m[3][2] -= STEP;
+                player->transform->m[3][2] -= STEP;
                 break;                        
             case SDLK_LEFT:                   
-                rocket->transform->m[3][0] -= STEP;
+                player->transform->m[3][0] -= STEP;
                 break;                        
             case SDLK_DOWN:                   
-                rocket->transform->m[3][2] += STEP;
+                player->transform->m[3][2] += STEP;
                 break;                        
             case SDLK_RIGHT:                  
-                rocket->transform->m[3][0] += STEP;
+                player->transform->m[3][0] += STEP;
                 break;
             }
             break;

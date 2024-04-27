@@ -2,22 +2,19 @@
 
 #include "main.h"
 
-#define SPEED 0.005f
+#define SPEED 0.05f
 
 SDL_bool IntersectRaySegmentSphere(const Vec3* o, const Vec3* d, const Vec3* so, float radius2);
 
 // TODO: See if I still need to check for vertices intersections.
-void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* direction) {
-    // Check if ball collides with anything. If it does,
-    // then change it's direction vector.
-    //
+void GameUpdate(const GameObject* objects, const size_t objects_count, GameObject* ball, Vec2* direction) {
+    for (size_t i = 0; i < objects_count; ++i) {
 
-    SDL_bool collides = SDL_FALSE;
-
-    for (size_t i = 0; i < mesh_count; ++i) {
-        const Mesh* mesh = meshes[i];
-        if (mesh == ball)
+        // Skip unactive objects and the ball itself.
+        if (objects[i].active == SDL_FALSE || &objects[i] == ball)
             continue;
+
+        GameObject* current = &objects[i];
 
         const Vec3 ball_origin = {
             .x = ball->transform->m[3][0],
@@ -26,14 +23,14 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
         };
         const float ball_radius = 1.0f;
 
-        for (uint_fast32_t j = 0; j < mesh->number_of_faces; ++j) {
+        for (uint_fast32_t j = 0; j < current->mesh->number_of_faces; ++j) {
             SDL_bool outside_plane    = SDL_FALSE;
             SDL_bool outside_vertices = SDL_FALSE;
             SDL_bool outside_edges    = SDL_FALSE;
 
-            const Vec3 a = Vec3MulByMat4x4(&mesh->vertices[mesh->indices[j * 3 + 0]], mesh->transform);
-            const Vec3 b = Vec3MulByMat4x4(&mesh->vertices[mesh->indices[j * 3 + 1]], mesh->transform);
-            const Vec3 c = Vec3MulByMat4x4(&mesh->vertices[mesh->indices[j * 3 + 2]], mesh->transform);
+            const Vec3 a = Vec3MulByMat4x4(&current->mesh->vertices[current->mesh->indices[j * 3 + 0]], current->transform);
+            const Vec3 b = Vec3MulByMat4x4(&current->mesh->vertices[current->mesh->indices[j * 3 + 1]], current->transform);
+            const Vec3 c = Vec3MulByMat4x4(&current->mesh->vertices[current->mesh->indices[j * 3 + 2]], current->transform);
 
             // Check for plane intersection.
             //
@@ -49,6 +46,7 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
             Vec3 abc_average = Vec3Add(&a, &b);
             abc_average = Vec3Add(&abc_average, &c);
             abc_average = Vec3ScalarMul(&abc_average, -(1.0f / 3.0f));
+
             const float d = Vec3Dot(&abc_average, &abc_normal);
 
             const float point_to_plane_distance = Vec3Dot(&abc_normal, &ball_origin) + d;
@@ -90,27 +88,27 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
             //
 
             const Vec2 mesh_center_to_ball = {
-                .x = ball->transform->m[3][0] - mesh->transform->m[3][0],
-                .z = ball->transform->m[3][2] - mesh->transform->m[3][2],
+                .x = current->transform->m[3][0] - ball->transform->m[3][0],
+                .z = current->transform->m[3][2] - ball->transform->m[3][2],
             };
             const Vec2 abc_normal_v2 = {
                 .x = abc_normal.x,
                 .z = abc_normal.z,
             };
 
-            // If we hit plane that points left (right), simply inverse x direction.
-            //
-
             const Vec2 unit_x = {
                 .x = 1.0f,
                 .z = 0.0f,
             };
 
-            if (Vec2Dot(&abc_normal_v2, &unit_x) == 1) {
+            // If we hit plane that points left (right), simply inverse x direction.
+            //
+
+            if (SDL_fabsf(Vec2Dot(&abc_normal_v2, &unit_x)) == 1) {
                 direction->x = -direction->x;
             }
             else {
-                // We hit plane that points up (down), calculate new direction.
+                // We hit plane that points forward (back), calculate new direction.
                 //
 
                 const float hit_angle_cos = Vec2Dot(&mesh_center_to_ball, &abc_normal_v2) / Vec2Length(&mesh_center_to_ball);
@@ -123,19 +121,13 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
                     direction->x = -direction->x;
             }
 
-            collides = SDL_TRUE;
+            *direction = Vec2Normalize(direction);
+
+            if (current->entity == SDL_TRUE)
+                current->active = SDL_FALSE;
+
             break;
         }
-
-        if (collides) break;
-    }
-
-    // Change direction if there was a collision.
-    //
-
-    if (collides) {
-        direction->x *= -1.0f;
-        direction->z *= -1.0f;
     }
 
     // Move ball.
@@ -143,6 +135,13 @@ void GameUpdate(const Mesh** meshes, const size_t mesh_count, Mesh* ball, Vec2* 
 
     ball->transform->m[3][0] += direction->x * SPEED;
     ball->transform->m[3][2] += direction->z * SPEED;
+}
+
+void GameObjectSetTransformPosition(GameObject* object, const float x, const float y, const float z) {
+    *object->transform = InitIdentityMatrix();
+    object->transform->m[3][0] = x;
+    object->transform->m[3][1] = y;
+    object->transform->m[3][2] = z;
 }
 
 // https://gamedev.stackexchange.com/questions/96459/fast-ray-sphere-collision-code

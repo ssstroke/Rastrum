@@ -6,7 +6,6 @@
 
 // All of the faces are nothing but triangles.
 typedef struct {
-    Mat4x4* transform;
     Vec3* vertices;
     uint_fast32_t* indices;
     uint_fast32_t number_of_faces;
