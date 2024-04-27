@@ -39,6 +39,9 @@ int main(void) {
             SDL_LogError(SDL_LOG_CATEGORY_ERROR, "SDL renderer creation failure: %s\n", SDL_GetError());
             goto Exit;
         }
+
+        SDL_ShowCursor(SDL_DISABLE);
+        SDL_SetRelativeMouseMode(SDL_TRUE);
     }
 
     RenderSetRenderer(renderer);
@@ -163,7 +166,7 @@ int main(void) {
 
     Vec2 ball_direction = {
         .x = 0.707f,
-        .z = 0.707f,
+        .z = -0.707f,
     };
 
     SDL_bool quit = SDL_FALSE;
