@@ -17,8 +17,6 @@ SDL_bool InputProcess(GameObject* player, Mat4x4* camera) {
 
             player->transform->m[3][0] = ((float)(event.motion.x - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2)) * 6.0f;
             camera->m[3][0] = ((float)(event.motion.x - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2)) * 6.0f;
-            /*player->transform->m[3][1] = ( (float)(event.motion.y - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2) ) * 10.0f;
-            player->transform->m[3][2] = ( (float)(event.motion.x - event.motion.y - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2) ) * 10.0f;*/
 
             break;
 
