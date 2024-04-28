@@ -4,7 +4,7 @@
 
 #define STEP 0.02f
 
-SDL_bool InputProcess(GameObject* player) {
+SDL_bool InputProcess(GameObject* player, Mat4x4* camera) {
     SDL_Event event;
     while (SDL_PollEvent(&event) == 1) {
         switch (event.type) {
@@ -15,7 +15,11 @@ SDL_bool InputProcess(GameObject* player) {
             // [0, 799] -> [-1, 1] -> [-6, 6]
             //
 
-            player->transform->m[3][0] = ( (float)(event.motion.x - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2) ) * 6.0f;
+            player->transform->m[3][0] = ((float)(event.motion.x - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2)) * 6.0f;
+            camera->m[3][0] = ((float)(event.motion.x - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2)) * 6.0f;
+            /*player->transform->m[3][1] = ( (float)(event.motion.y - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2) ) * 10.0f;
+            player->transform->m[3][2] = ( (float)(event.motion.x - event.motion.y - WINDOW_WIDTH / 2) / (float)(WINDOW_WIDTH / 2) ) * 10.0f;*/
+
             break;
 
         case SDL_KEYDOWN:

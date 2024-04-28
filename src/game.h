@@ -9,7 +9,8 @@ typedef struct {
     SDL_bool entity;
     Mesh* mesh;
     Mat4x4* transform;
+    Uint32 color;
 } GameObject;
 
-void GameUpdate(const GameObject* objects, const size_t objects_count, GameObject* player, Vec2* direction);
+void GameUpdate(GameObject* objects, const size_t objects_count, GameObject* player, Vec2* direction);
 void GameObjectSetTransformPosition(GameObject* object, const float x, const float y, const float z);

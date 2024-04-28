@@ -5,7 +5,9 @@
 SDL_bool IntersectRaySegmentSphere(const Vec3* o, const Vec3* d, const Vec3* so, float radius2);
 
 // TODO: See if I still need to check for vertices intersections.
-void GameUpdate(const GameObject* objects, const size_t objects_count, GameObject* ball, Vec2* direction) {
+void GameUpdate(GameObject* objects, const size_t objects_count, GameObject* ball, Vec2* direction) {
+    static uint_fast8_t destroyed_counter = 0;
+
     for (size_t i = 0; i < objects_count; ++i) {
 
         // Skip unactive objects and the ball itself.
@@ -121,8 +123,23 @@ void GameUpdate(const GameObject* objects, const size_t objects_count, GameObjec
 
             *direction = Vec2Normalize(direction);
 
-            if (current->entity == SDL_TRUE)
+            if (current->entity == SDL_TRUE) {
                 current->active = SDL_FALSE;
+
+                // Reset game if all entities have been destroyed.
+
+                destroyed_counter += 1;
+                if (destroyed_counter == 8) {
+                    destroyed_counter = 0;
+                    for (size_t k = 0; k < objects_count; ++k) {
+                        objects[k].active = SDL_TRUE;
+                        direction->x = 0.0f;
+                        direction->z = 0.5f;
+                        ball->transform->m[3][0] = 0.0f;
+                        ball->transform->m[3][2] = -7.0f;
+                    }
+                }
+            }
 
             break;
         }

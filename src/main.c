@@ -76,30 +76,35 @@ int main(void) {
         objects[0].mesh = mesh_wall_side;
         objects[0].active = SDL_TRUE;
         objects[0].transform = malloc(sizeof(Mat4x4));
+        objects[0].color = RGBA_COLOR_GRUVBOX_YELLOW;
         GameObjectSetTransformPosition(&objects[0], -9.0f, 0, -14.0f);
 
         // Right wall.
         objects[1].mesh = mesh_wall_side;
         objects[1].active = SDL_TRUE;
         objects[1].transform = malloc(sizeof(Mat4x4));
+        objects[1].color = RGBA_COLOR_GRUVBOX_YELLOW;
         GameObjectSetTransformPosition(&objects[1], 9.0f, 0, -14.0f);
 
         // Back wall.
         objects[2].mesh = mesh_wall_back;
         objects[2].active = SDL_TRUE;
         objects[2].transform = malloc(sizeof(Mat4x4));
+        objects[2].color = RGBA_COLOR_GRUVBOX_YELLOW;
         GameObjectSetTransformPosition(&objects[2], 0, 0, -27.0f);
 
         // Ball.
         objects[3].mesh = mesh_ball;
         objects[3].active = SDL_TRUE;
         objects[3].transform = malloc(sizeof(Mat4x4));
+        objects[3].color = RGBA_COLOR_GRUVBOX_GREEN;
         GameObjectSetTransformPosition(&objects[3], 0, 0, -4.0f);
 
         // Player.
         objects[4].mesh = mesh_rectangle;
         objects[4].active = SDL_TRUE;
         objects[4].transform = malloc(sizeof(Mat4x4));
+        objects[4].color = RGBA_COLOR_GRUVBOX_BLUE;
         GameObjectSetTransformPosition(&objects[4], 0, 0, -1.0f);
 
         // Entities.
@@ -107,41 +112,49 @@ int main(void) {
         objects[5].active = SDL_TRUE;
         objects[5].entity = SDL_TRUE;
         objects[5].transform = malloc(sizeof(Mat4x4));
+        objects[5].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[5], -6.0f, 0, -24.0f);
         objects[6].mesh = mesh_rectangle;
         objects[6].active = SDL_TRUE;
         objects[6].entity = SDL_TRUE;
         objects[6].transform = malloc(sizeof(Mat4x4));
+        objects[6].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[6], -2.0f, 0, -24.0f);
         objects[7].mesh = mesh_rectangle;
         objects[7].active = SDL_TRUE;
         objects[7].entity = SDL_TRUE;
         objects[7].transform = malloc(sizeof(Mat4x4));
+        objects[7].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[7], 2.0f, 0, -24.0f);
         objects[8].mesh = mesh_rectangle;
         objects[8].active = SDL_TRUE;
         objects[8].entity = SDL_TRUE;
         objects[8].transform = malloc(sizeof(Mat4x4));
+        objects[8].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[8], 6.0f, 0, -24.0f);
         objects[9].mesh = mesh_rectangle;
         objects[9].active = SDL_TRUE;
         objects[9].entity = SDL_TRUE;
         objects[9].transform = malloc(sizeof(Mat4x4));
+        objects[9].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[9], -6.0f, 0, -22.0f);
         objects[10].mesh = mesh_rectangle;
         objects[10].active = SDL_TRUE;
         objects[10].entity = SDL_TRUE;
         objects[10].transform = malloc(sizeof(Mat4x4));
+        objects[10].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[10], -2.0f, 0, -22.0f);
         objects[11].mesh = mesh_rectangle;
         objects[11].active = SDL_TRUE;
         objects[11].entity = SDL_TRUE;
         objects[11].transform = malloc(sizeof(Mat4x4));
+        objects[11].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[11], 2.0f, 0, -22.0f);
         objects[12].mesh = mesh_rectangle;
         objects[12].active = SDL_TRUE;
         objects[12].entity = SDL_TRUE;
         objects[12].transform = malloc(sizeof(Mat4x4));
+        objects[12].color = RGBA_COLOR_GRUVBOX_RED;
         GameObjectSetTransformPosition(&objects[12], 6.0f, 0, -22.0f);
     }
     
@@ -152,7 +165,7 @@ int main(void) {
     //
 
     const float camera_angle = -45.0f;
-    const Mat4x4 camera = {
+    Mat4x4 camera = {
         .m = {
             {1,  0,  0,  0},
             { 0,  SDL_cosf(DEGREES_TO_RADIANS(camera_angle)), SDL_sinf(DEGREES_TO_RADIANS(camera_angle)), 0},
@@ -160,7 +173,6 @@ int main(void) {
             {0,  16, 7, 1},
         }
     };
-    RenderSetCamera(&camera);
 
     Vec2 ball_direction = {
         .x = 0.707f,
@@ -172,7 +184,8 @@ int main(void) {
         // Input.
         //
 
-        quit = InputProcess(player);
+        quit = InputProcess(player, &camera);
+        RenderSetCamera(&camera);
 
 
         // Update game.
@@ -186,7 +199,7 @@ int main(void) {
         RenderBackground(RGBA_COLOR_GUNMETAL);
 
         for (size_t i = 0; i < sizeof(objects) / sizeof(GameObject); ++i)
-            RenderGameObjectWireframe(&objects[i], objects[i].mesh->color);
+            RenderGameObjectWireframe(&objects[i], objects[i].color);
 
         SDL_RenderPresent(renderer);
 
